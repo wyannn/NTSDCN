@@ -12,13 +12,13 @@ import numpy as np
 from PIL import Image
 from utils import laplacian_loss
 
-test_mos = 'test_kodak/mos'
+test_mos = '../test_kodak/mos'
 pic_list_mos = os.listdir(test_mos)
 
-test_r = 'test_kodak/0r'
+test_r = '../test_kodak/0r'
 pic_list_r = os.listdir(test_r)
 
-test_b = 'test_kodak/0b'
+test_b = '../test_kodak/0b'
 pic_list_b = os.listdir(test_b)
 
 checkpoint_dir = 'checkpoint/try_64'
@@ -27,7 +27,7 @@ model_list = ckpt.all_model_checkpoint_paths
 
 for ckpt_name in model_list:
     model_dir = ckpt_name
-    res_dir = 'res/' + ckpt_name[-8:]
+    res_dir = '../res/' + ckpt_name[-8:]
     os.mkdir(res_dir)
     
     for i in range(len(pic_list_mos)):
@@ -97,7 +97,7 @@ for ckpt_name in model_list:
                     return g_lp, g_out
               
             def model_r(g):
-                
+        
                 with tf.variable_scope('r'):
                                 
                     r_b1_alpha = tf.contrib.layers.conv2d(g, 32, kernel_size=(3,3), stride=1, padding='SAME', activation_fn=tf.sigmoid)
