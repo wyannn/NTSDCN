@@ -11,13 +11,6 @@ The code was developed using Python 3.5 & TensorFlow 1.9.0 & CUDA 9.0.
 
 ## Code v1.0
 Currently, we release our research code for testing. It should produce the same results as in the paper under default configuration.
-## Testing
-* It's easy to understand testing functions and to test your own data.
-* An example of test usage is shown as follows:
-```bash 
-python test.py
-```
-
 
 ## Citation
 
