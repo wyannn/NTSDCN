@@ -48,7 +48,7 @@ class NTSDCN(object):
         self.loss_b = tf.reduce_mean(tf.losses.absolute_difference(self.labels_b, self.pred_b)) + 0.01 * self.lp_b
         self.loss_rgb = tf.reduce_mean(tf.losses.absolute_difference(self.labels_rgb, self.pred_rgb))
 
-        self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(max_to_keep=100)
 
     def train(self, Config):
         
@@ -88,7 +88,7 @@ class NTSDCN(object):
                 batch_labels_b = train_label_b[permutation[idx*Config.batch_size : (idx+1)*Config.batch_size]]
                 
                 counter += 1
-                
+                """
                 if ep < Config.epoch // 4 * 1:
                     _, err = self.sess.run([self.train_g, self.loss_g], feed_dict={self.images_mos: batch_images_mos, self.labels_g: batch_labels_g})
                 elif ep < Config.epoch // 4 * 2:
@@ -97,7 +97,9 @@ class NTSDCN(object):
                     _, err = self.sess.run([self.train_b, self.loss_b], feed_dict={self.images_mos: batch_images_mos, self.images_b: batch_images_b, self.labels_b: batch_labels_b, self.labels_g: batch_labels_g})
                 else:
                     _, err = self.sess.run([self.train_rgb, self.loss_rgb], feed_dict={self.images_mos: batch_images_mos, self.images_r: batch_images_r, self.images_b: batch_images_b, self.labels_r: batch_labels_r, self.labels_g: batch_labels_g, self.labels_b: batch_labels_b})
-                
+                """
+                _, err = self.sess.run([self.train_rgb, self.loss_rgb], feed_dict={self.images_mos: batch_images_mos, self.images_r: batch_images_r, self.images_b: batch_images_b, self.labels_r: batch_labels_r, self.labels_g: batch_labels_g, self.labels_b: batch_labels_b})
+
  
                 if counter % 100 == 0:   
                     print("Epoch: [%2d], step: [%2d], time: [%4.4f], loss: [%.8f]" \
@@ -161,6 +163,7 @@ class NTSDCN(object):
             self.vars_g = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'g')
             
             return g_lp, g_out
+
       
     def model_r(self, g):
         

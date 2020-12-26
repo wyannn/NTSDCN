@@ -12,13 +12,13 @@ import numpy as np
 from PIL import Image
 from utils import laplacian_loss
 
-test_mos = '../test_kodak/mos'
+test_mos = '../test_mcm/mos'
 pic_list_mos = os.listdir(test_mos)
 
-test_r = '../test_kodak/0r'
+test_r = '../test_mcm/0r'
 pic_list_r = os.listdir(test_r)
 
-test_b = '../test_kodak/0b'
+test_b = '../test_mcm/0b'
 pic_list_b = os.listdir(test_b)
 
 checkpoint_dir = 'checkpoint/try_64'
@@ -84,20 +84,20 @@ for ckpt_name in model_list:
                     g_b3_conv_6 = tf.contrib.layers.conv2d(g_b3_conv_5, 64, kernel_size=(3,3), stride=1, padding='SAME', activation_fn=None) 
                     g_b3_conv_add2 = g_b3_conv_6 + 0.1 * g_b3_conv1_add
                     
-                    g_b3_total = tf.concat([g_b1_conv_add2, g_b2_conv_add2, g_b3_conv_add2], 3)
-                    g_b3_red = tf.contrib.layers.conv2d(g_b3_total, 64, kernel_size=(1,1), stride=1, padding='SAME')
-                    
-                    g_conv_high1 = tf.contrib.layers.conv2d(g_b3_red, 64, kernel_size=(3,3), stride=1, padding='SAME')
+                    g_total = tf.concat([g_b1_conv_add2, g_b2_conv_add2, g_b3_conv_add2], 3)
+                    g_red = tf.contrib.layers.conv2d(g_total, 64, kernel_size=(1,1), stride=1, padding='SAME')
+                            
+                    g_conv_high1 = tf.contrib.layers.conv2d(g_red, 64, kernel_size=(3,3), stride=1, padding='SAME')
                     g_conv_high2 = tf.contrib.layers.conv2d(g_conv_high1, 64, kernel_size=(3,3), stride=1, padding='SAME')
                     g_residual = tf.contrib.layers.conv2d(g_conv_high2, 1, kernel_size=(3,3), stride=1, padding='SAME', activation_fn=None)
                     g_out = g_residual + images_mos
                     
-                    g_lp = (laplacian_loss(g_b1_conv1_add) + laplacian_loss(g_b2_conv1_add) + laplacian_loss(g_b3_conv1_add)) / 3
+                    g_lp = laplacian_loss(g_b1_conv1_add) + laplacian_loss(g_b2_conv1_add) + laplacian_loss(g_b3_conv1_add)
                                         
                     return g_lp, g_out
               
             def model_r(g):
-        
+                
                 with tf.variable_scope('r'):
                                 
                     r_b1_alpha = tf.contrib.layers.conv2d(g, 32, kernel_size=(3,3), stride=1, padding='SAME', activation_fn=tf.sigmoid)
@@ -151,6 +151,7 @@ for ckpt_name in model_list:
                     b_lp = laplacian_loss(b_b1_conv1_add)
                                         
                     return b_lp, b_out
+
                                  
             x, g = model_g()
             y, r = model_r(g)
