@@ -10,7 +10,7 @@ TCSVT
 The code was developed using Python 3.5 & TensorFlow 1.9.0 & CUDA 9.0. 
 
 ## Code v1.0
-Currently, we release our research code for testing. It should produce the same results as in the paper under default configuration.
+Currently, we release our research code for testing. The algorithm was reimplemented by us and got better results than the paper.
 
 ## Citation
 
